@@ -13,7 +13,33 @@ date: May 2019
 * Slides: https://github.com/medale/
 * Scala Spark Code Examples: https://github.com/medale/
 
-# Goals
+# Data engineering on small dataset
+
+![Laptop](graphics/Laptop.png)
+
+# Data engineering for larger dataset (Vertical Scaling)
+
+![Beefed-up Server](graphics/VerticalScaling.png){height=80%}
+
+# Data engineering for large datasets (Horizontal Scaling)
+
+![Multiple cooperating Servers](graphics/HorizontalScaling.png)
+
+# Layers of Spark
+* TODO: distributed resource management
+* Spark Standalone
+* Kubernetes
+* Hadoop YARN
+* Mesos
+* Spark application: Driver, executors
+* tasks, partitions (distributed file system, commonly accessible data store)
+
+# Cluster Manager, Driver, Executors, Tasks
+
+![](graphics/SparkApplication.png)
+\tiny Source: Apache Spark website
+
+
 
 # And now for something completely different: Colon Cancer
 * Screening saves lives! ![](graphics/Chemo.png){width=100px}
@@ -23,7 +49,7 @@ date: May 2019
 
 # Questions?
 
-![](graphics/Farley.png){width=100px}\ ![](graphics/AsymmetrikPingPong.png){width=100px}
+![](graphics/Farley.png){width=200px}
 
 * medale@asymmetrik.com
 * [Infrequent blog/past presentations http://uebercomputing.com/](http://uebercomputing.com/)
