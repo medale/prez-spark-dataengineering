@@ -16,4 +16,4 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
 //sbt <config-scope>:packageBin
 //sbt packageZipTarball
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.12")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.20")

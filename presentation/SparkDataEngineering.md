@@ -25,12 +25,17 @@ date: May 2019
 
 ![Multiple cooperating Servers](graphics/HorizontalScaling.png)
 
+# Cluster Manager
+
+![](graphics/)
+
 # Layers of Spark
 * TODO: distributed resource management
 * Spark Standalone
 * Kubernetes
 * Hadoop YARN
 * Mesos
+* Databricks
 * Spark application: Driver, executors
 * tasks, partitions (distributed file system, commonly accessible data store)
 

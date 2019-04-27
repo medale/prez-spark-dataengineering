@@ -2,16 +2,16 @@ import sbt._
 
 object Dependencies {
 
-  val sparkVersion = "2.4.0"
+  val sparkVersion = "2.4.2"
 
   //match Spark's pom for these dependencies!
-  val scalaVersionStr = "2.11.8"
+  val scalaVersionStr = "2.11.12"
   val hadoopVersion = "2.7.3"
   //end of Spark version match
 
   lazy val commonDependencies = Seq(
      ("org.scala-lang" % "scala-library" % scalaVersionStr),
-     ("commons-io" % "commons-io" % "2.4")
+     ("commons-io" % "commons-io" % "2.6")
   )
 
   //Avro, CSV - https://spark-packages.org/
@@ -26,11 +26,11 @@ object Dependencies {
 
   //test and integration test dependencies/scope
   lazy val testDependencies = Seq(
-    ("org.scalatest" %% "scalatest" % "3.0.5" % "it,test")
+    ("org.scalatest" %% "scalatest" % "3.0.7" % "it,test")
   )
 
   lazy val sparkTestDependencies = Seq(
-    ("com.holdenkarau" %% "spark-testing-base" % "2.3.1_0.10.0" % "it,test"),
+    ("com.holdenkarau" %% "spark-testing-base" % "2.4.0_0.11.0" % "it,test"),
     ("org.apache.spark" %% "spark-hive" % sparkVersion % "it,test")
   )
 }

@@ -1,5 +1,7 @@
 import Dependencies._
 
+name := "spark-dataengineering"
+
 //http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html
 //-Xlint enable all recommended warnings
 ThisBuild / javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint", "-encoding", "UTF-8")
@@ -24,18 +26,28 @@ ThisBuild / initialize := {
 }
 
 // match Apache Spark Scala (see Spark pom.xml)
-ThisBuild / scalaVersion := "2.11.8"
+ThisBuild / scalaVersion := "2.11.12"
 
 //for scaladoc to link to external libraries (see https://www.scala-sbt.org/1.x/docs/Howto-Scaladoc.html)
 ThisBuild / autoAPIMappings := true
 
 ThisBuild / resolvers += Resolver.mavenLocal
 
+//https://stackoverflow.com/questions/18838944/how-to-add-provided-dependencies-back-to-run-test-tasks-classpath
+ThisBuild / run in Compile := Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run)).evaluated
+ThisBuild / runMain in Compile := Defaults.runMainTask(fullClasspath in Compile, runner in(Compile, run)).evaluated
+
 //run sbt-assembly via: sbt assembly to build fat jar
 lazy val assemblyPluginSettings = Seq(
   assemblyJarName in assembly := s"${baseDirectory.value.name}-${version.value}-fat.jar",
   //exclude scala from generated fat jars
   assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
+  //put templatized application.conf (see editsource) in root of fat jar
+  assembledMappings in assembly += {
+    sbtassembly.MappingSet(None, Vector(
+      (baseDirectory.value / "target" / "application.conf") -> "application.conf"
+    ))
+  },
   //http://queirozf.com/entries/creating-scala-fat-jars-for-spark-on-sbt-with-sbt-assembly-plugin
   assemblyMergeStrategy in assembly := {
     case PathList("javax", "ws", _@_*) => MergeStrategy.discard
@@ -61,32 +73,19 @@ lazy val miscSettings = Seq(
   organization := "com.uebercomputing"
 )
 
-lazy val allSettings = miscSettings ++ assemblyPluginSettings
+lazy val combinedSettings = miscSettings ++ assemblyPluginSettings
 
 ////////////////////////////////////////////////////////////////////////////
 // Project/module definitions                                             //
 ////////////////////////////////////////////////////////////////////////////
-val namePrefix = "sparkdataeng"
 
-lazy val common = (project in file("common"))
+lazy val analyticsBaseDir = "analytics"
+
+lazy val datasetAnalytics = (project in file(s"${analyticsBaseDir}/dataset"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings: _*)
-  .settings(allSettings: _*)
+  .settings(combinedSettings: _*)
   .settings(
-    name := s"${namePrefix}-common",
-    libraryDependencies :=
-      commonDependencies ++
-      sparkDependencies ++
-        testDependencies
-  )
-
-lazy val analytics = project
-  .dependsOn(common)
-  .configs(IntegrationTest)
-  .settings(Defaults.itSettings: _*)
-  .settings(allSettings: _*)
-  .settings(
-    name := s"${namePrefix}-analytics",
     libraryDependencies :=
       commonDependencies ++
         sparkDependencies ++
@@ -94,10 +93,22 @@ lazy val analytics = project
         sparkTestDependencies
   )
 
+lazy val rddAnalytics = (project in file(s"${analyticsBaseDir}/rdd"))
+.configs(IntegrationTest)
+.settings(Defaults.itSettings: _*)
+.settings(combinedSettings: _*)
+.settings(
+  libraryDependencies :=
+    commonDependencies ++
+      sparkDependencies ++
+      testDependencies ++
+      sparkTestDependencies
+)
+
 //root just needs to aggregate all projects
 //when we use any sbt command it gets run for all subprojects also
 lazy val root = (project in file("."))
-  .aggregate(common, analytics)
+  .aggregate(datasetAnalytics, rddAnalytics)
   .configs(IntegrationTest)
   .settings(Defaults.itSettings: _*)
   .settings(publish := {})
