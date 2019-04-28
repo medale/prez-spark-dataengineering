@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  val sparkVersion = "2.4.2"
+  val sparkVersion = "2.4.0"
 
   //match Spark's pom for these dependencies!
   val scalaVersionStr = "2.11.12"
