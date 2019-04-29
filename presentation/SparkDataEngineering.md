@@ -13,6 +13,10 @@ date: May 2019
 * Slides: https://github.com/medale/
 * Scala Spark Code Examples: https://github.com/medale/
 
+# Data engineering 
+
+![](graphics/DataEngineering.png)
+
 # Data engineering on small dataset
 
 ![Laptop](graphics/Laptop.png)
@@ -27,7 +31,7 @@ date: May 2019
 
 # Cluster Manager
 
-![](graphics/)
+![](graphics/ClusterManagers.png)
 
 # Layers of Spark
 * TODO: distributed resource management

@@ -17,6 +17,10 @@
 
 # Goals
 
+# Data Engineering
+
+* [dataquest.io: "transform data into a useful format for analysis"](https://www.dataquest.io/blog/what-is-a-data-engineer/)
+
 # Narrow vs. wide transformations
 https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformations.html
 
