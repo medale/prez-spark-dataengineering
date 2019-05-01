@@ -21,6 +21,14 @@
 
 * [dataquest.io: "transform data into a useful format for analysis"](https://www.dataquest.io/blog/what-is-a-data-engineer/)
 
+# Code executing on driver vs. executor
+
+# Running spark-shell in cluster
+
+--deploy-mode (default client)
+
+# Default file system/file system URLs
+
 # Narrow vs. wide transformations
 https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformations.html
 
@@ -28,9 +36,12 @@ https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformati
 
 # Shuffle partitions
 
-# Schemas
+# Schemas 
+* inferred 
+* read/write schema
 
 # Parquet
+* data partitioning
 
 https://www.gharchive.org/
 wget http://data.gharchive.org/2019-04-28-0.json.gz

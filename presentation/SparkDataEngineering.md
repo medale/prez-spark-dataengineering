@@ -33,22 +33,53 @@ date: May 2019
 
 ![](graphics/ClusterManagers.png)
 
-# Layers of Spark
-* TODO: distributed resource management
-* Spark Standalone
-* Kubernetes
-* Hadoop YARN
-* Mesos
-* Databricks
-* Spark application: Driver, executors
-* tasks, partitions (distributed file system, commonly accessible data store)
+# Resilient Distributed Datasets (RDDs)
 
-# Cluster Manager, Driver, Executors, Tasks
+![](graphics/SparkRdd.png)
+
+# Anatomy of a Spark Application
 
 ![](graphics/SparkApplication.png)
 \tiny Source: Apache Spark website
 
+# Hello, Spark World!
 
+![](graphics/CodeHelloSparkWorldOverview.png)
+
+# Starting Spark Standalone Cluster Manager
+
+\small
+```bash
+# Start on master
+$SPARK_HOME/sbin/start-master.sh --host 192.168.1.230
+
+# Start one or more workers
+$SPARK_HOME/sbin/start-slave.sh spark://192.168.1.230:7077
+```
+
+# Spark Standalone Cluster Manager UI - idle
+
+![](graphics/SparkStandaloneUi.png)
+
+# Running spark-shell in cluster
+
+```bash
+spark-shell --master spark://192.168.1.230:7077 \
+ --driver-memory 1g \
+ --executor-memory 2g \
+ --total-executor-cores 4 \
+ --executor-cores 2 \
+ --jars /tmp/dataset-0.9.0-SNAPSHOT-fat.jar
+```
+
+# Spark Standalone Cluster Manager - 1 running application
+
+![](graphics/SparkStandaloneSparkShell.png)
+
+
+# RDDs - Not deprecated!
+
+![](graphics/CodeRddOverview.png)
 
 # And now for something completely different: Colon Cancer
 * Screening saves lives! ![](graphics/Chemo.png){width=100px}
