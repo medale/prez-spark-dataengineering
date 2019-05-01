@@ -27,6 +27,10 @@
 
 --deploy-mode (default client)
 
+# Job - Stages, tasks, partitions
+* each stage - all transformations that can be done without shuffle (narrow transformations)
+* wide transformation - shuffle (data in a partition was created from many other partitions)
+
 # Default file system/file system URLs
 
 # Narrow vs. wide transformations
@@ -42,6 +46,10 @@ https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformati
 
 # Parquet
 * data partitioning
+
+# Memory pressure - partitions, executors, shuffle partitions
+
+# Serialization code
 
 https://www.gharchive.org/
 wget http://data.gharchive.org/2019-04-28-0.json.gz

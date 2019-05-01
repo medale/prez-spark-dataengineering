@@ -1,5 +1,10 @@
+package com.uebercomputing
+
 import org.apache.spark.sql.SparkSession
 
+/**
+  *
+  */
 object HelloSparkWorld {
 
   def process(spark: SparkSession): (Long,Long) = {

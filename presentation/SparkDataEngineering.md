@@ -71,11 +71,72 @@ spark-shell --master spark://192.168.1.230:7077 \
  --executor-cores 2 \
  --jars /tmp/dataset-0.9.0-SNAPSHOT-fat.jar
 ```
+# Spark Shell Startup
+
+![](graphics/SparkShell.png)
 
 # Spark Standalone Cluster Manager - 1 running application
 
 ![](graphics/SparkStandaloneSparkShell.png)
 
+# HelloSparkWorld in spark-shell
+
+```scala
+scala> import com.uebercomputing.HelloSparkWorld
+import com.uebercomputing.HelloSparkWorld
+
+scala> HelloSparkWorld.process(spark)
+res0: (Long, Long) = (147374,6699)
+```
+
+# Spark Application UI - Jobs, stages, tasks
+
+![](graphics/UiHelloWorldJobs.png)
+
+# Job - n lazy transformations, 1 action
+
+\small
+```scala
+//job 0 - list files, infer schema
+val records = spark.read.json("file:///datasets/github/data")
+//transformation
+records.cache()
+//action - job 1
+val totalEventCount = records.count()
+
+//transformation - datasets are immutable!
+val prs = records.where(records("type") === "PullRequestEvent")
+//action - job 2    
+val pullRequestEventCount = prs.count()
+```
+
+# Job 0 - Stages, tasks, partitions
+
+![](graphics/UiJobsHeader.png){height=50%}
+![](graphics/UiJobs01.png){height=50%}
+
+# Job 0 - Stage 0, tasks, partitions
+
+![](graphics/UiStagesHeader.png){height=50%}
+![](graphics/UiStage0.png){height=50%}
+
+# Input partitions - splittable file?
+
+![](graphics/SparkRdd.png)
+
+# Job 1 - count
+
+![](graphics/UiJobsHeader.png){height=50%}
+![](graphics/UiJobs01.png){height=50%}
+
+# Job 1 - count Stages 1 and 2
+
+![](graphics/UiStagesHeader.png){height=50%}
+![](graphics/UiStages12.png){height=50%}
+
+# Job 1 - Stages 1 and 2 DAG
+
+![](graphics/UiJob1Dag.png){height=95%}
 
 # RDDs - Not deprecated!
 
