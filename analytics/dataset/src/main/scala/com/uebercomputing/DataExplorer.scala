@@ -19,6 +19,11 @@ object DataExplorer {
     val prs = records.where(records("type") === "PullRequestEvent")
     val pullRequestEventCount = prs.count()
 
+    import spark.implicits._
+
+    val typeCounts = records.groupBy($"type").count.orderBy($"count".desc)
+    typeCounts.show(truncate = false)
+
     records.unpersist()
     (totalEventCount, pullRequestEventCount)
   }

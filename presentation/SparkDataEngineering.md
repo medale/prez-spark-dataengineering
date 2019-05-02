@@ -302,10 +302,30 @@ distinctTypes.show()
 
 ![](graphics/UiStorage.png)
 
+# Default file system/file system URLs
+
+```scala
+val hc = spark.sparkContext.hadoopConfiguration
+hc.get("fs.defaultFS")
+//res4: String = file:///
+
+spark.read.json("/datasets/github/data")
+spark.read.json("file:///datasets/github/data")
+
+//hdfs://<name-node>:port
+//s3a://<bucket-name>
+
+```
 
 # Input partitions - splittable file?
 
-![](graphics/SparkRdd.png)
+* Splittable: bzip2, parquet, avro
+* Non-splittable: gzip (1 task per file)
+
+```scala
+hc.get("dfs.block.size")
+//res6: String = 134217728
+```
 
 # Resilient Distributed Datasets (RDDs)
 
@@ -314,6 +334,52 @@ distinctTypes.show()
 # RDDs - Not deprecated!
 
 ![](graphics/CodeRddOverview.png)
+
+# Datasets/DataFrames compiled to RDDs
+* Catalyst query optimizer for built-in functions
+* Project Tungsten - memory management
+     * Row storage (Apache Arrow)
+     * Encoders for Dataset objects (spark.implicits._)
+
+# Data Exploration - event type distribution
+\scriptsize
+```scala
+
+val prs = records.where(records("type") === "PullRequestEvent")
+val pullRequestEventCount = prs.count()
+
+import spark.implicits._
+val typeCounts = records.groupBy($"type").
+   count.orderBy($"count".desc)
+typeCounts.show
++--------------------+-----+                                                    
+|                type|count|
++--------------------+-----+
+|           PushEvent|82518|
+|         CreateEvent|18313|
+|          WatchEvent|16868|
+|    PullRequestEvent| 6699|
+...   
+```
+# Narrow vs. wide transformations
+* narrow: all data from one partition
+* wide: data from multiple parent partitions (shuffle)
+
+# Shuffle Partitions - Default
+
+![](graphics/UiShufflePartitionsDefault.png)
+
+# Setting Shuffle Partitions
+
+\Large
+```scala
+spark.conf.set("spark.sql.shuffle.partitions", "10")
+```
+# Shuffle Partitions Optimized
+
+![](graphics/UiShufflePartitionsOptimized.png)
+
+
 
 # And now for something completely different: Colon Cancer
 * Screening saves lives! ![](graphics/Chemo.png){width=100px}

@@ -178,33 +178,62 @@
 # Spark Application UI - Stage details
 * input, output
 
+# Job 1 - Stages 1 and 2 DAG
+* See two stages - shuffle
 
-# Data Exploration - What types of events?
+# One Job = n lazy transformations, 1 action
+* lazy transformations
 * Dataset api - select (projection)
 * distinct
-* lazy transformations
-* show - action
+* show - action, count (2 job)
+* cache/unpersist
 
-
-# Job - Stages, tasks, partitions
-* each stage - all transformations that can be done without shuffle (narrow transformations)
-* wide transformation - shuffle (data in a partition was created from many other partitions)
+# Spark Application UI - Storage (caching)
+* cache (persist level)
+* unpersist
+* in memory, spill to local disk
 
 # Default file system/file system URLs
+* no URL prefix needed for defaultFS
+* file, hdfs, s3a
 
+# Input partitions - splittable file?
+* Splittable: bzip2, parquet, avro
+* Non-splittable: gzip (1 task per file)
+* small file problem
+
+# Datasets/DataFrames compiled to RDDs
+* Catalyst query optimizer for built-in functions
+* Project Tungsten - memory management
+     * Row storage (Apache Arrow)
+     * Encoders for Dataset objects (spark.implicits._)
+  
+# Data Exploration - event type distribution
+* where clause
+* groupBy - RelationalGroupedDataset
+     * count
+     * avg, sum, agg (agg functions mean, std dev...)
+* where(String), where(Column)
+* getting column - apply on Dataset, $, col function
+   
 # Narrow vs. wide transformations
-https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformations.html
+* https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformations.html
+* narrow, wide
 
-# Splittable data formats
+# Shuffle Partitions default
+* 200 ("spark.sql.shuffle.partitions")
 
-# Shuffle partitions
+# Setting Shuffle Partitions
+* "spark.sql.shuffle.partitions"
 
-# Schemas 
-* inferred 
-* read/write schema
+# Shuffle Partitions Optimized
+* Less time - 0.1 vs. 0.8
+
 
 # Parquet
 * data partitioning
+
+# Catalyst optimizer, tungsten memory management
 
 # Memory pressure - partitions, executors, shuffle partitions
 
