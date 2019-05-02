@@ -229,6 +229,35 @@
 # Shuffle Partitions Optimized
 * Less time - 0.1 vs. 0.8
 
+# API - Some Dataset Transformations
+* select
+* where
+* distinct
+* limit
+* orderBy
+* join
+
+# API - Some Dataset Actions
+* collect
+* count
+* take(n)
+* head
+* write - DataFrameWriter
+
+# DataFrameWriter
+* DataSourceRegister, implicits
+
+# Just the PullRequestEvents and their schema
+* text - one column "value"
+* 
+
+# API - Column
+* +, -, *, %
+* ===, =!=, >, <, ...
+* asc, desc
+* startsWith, contains, endsWith, like, rlike
+* isNull, isNaN, isIn
+
 
 # Parquet
 * data partitioning

@@ -1,5 +1,7 @@
 package com.uebercomputing
 
+import org.apache.spark.sql.DataFrameWriter
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 
 object DataExplorer {
@@ -25,6 +27,12 @@ object DataExplorer {
     typeCounts.show(truncate = false)
 
     records.unpersist()
+
+    val texts = spark.read.text(RecordsUrl)
+    val prsText = texts.where($"value".contains("PullRequestEvent"))
+    val reparteds = prsText.repartition(2)
+    reparteds.write.text("file:///datasets/github/prs")
+
     (totalEventCount, pullRequestEventCount)
   }
 

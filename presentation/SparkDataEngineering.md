@@ -379,6 +379,45 @@ spark.conf.set("spark.sql.shuffle.partitions", "10")
 
 ![](graphics/UiShufflePartitionsOptimized.png)
 
+# API - Some Dataset Transformations
+* select
+* where
+* distinct
+* limit
+* orderBy
+* join
+
+# API - Some Dataset Actions
+* collect
+* count
+* take(n)
+* head
+* write - DataFrameWriter
+
+# DataFrameWriter
+* csv
+* jdbc
+* parquet
+* text
+
+# Just the PullRequestEvents and their schema
+
+```scala
+val texts = spark.read.text(RecordsUrl)
+val prsText = texts.where($"value".contains("PullRequestEvent"))
+
+val reparteds = prsText.repartition(2)
+reparteds.write.text("file:///datasets/github/prs")
+```
+
+# API - Column
+* +, -, *, %
+* ===, =!=, >, <, ...
+* asc, desc
+* startsWith, contains, endsWith, like, rlike
+* isNull, isNaN, isIn
+
+# API - functions
 
 
 # And now for something completely different: Colon Cancer
