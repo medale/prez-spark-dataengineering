@@ -105,7 +105,8 @@ def main(args: Array[String]): Unit = {
 \Large
 ```scala
 //spark.read - DataFrameReader
-val records: DataFrame = spark.read.json(RecordsUrl)
+val records: DataFrame = 
+   spark.read.json(RecordsUrl)
 ```
 
 # spark.read: DataFrameReader - Input
@@ -341,8 +342,9 @@ hc.get("dfs.block.size")
 
 val prs = records.where(records("type") === "PullRequestEvent")
 val pullRequestEventCount = prs.count()
+//6699
 
-import spark.implicits._
+//import spark.implicits._ - auto-imported by shell
 val typeCounts = records.groupBy($"type").
    count.orderBy($"count".desc)
 typeCounts.show
@@ -365,7 +367,7 @@ typeCounts.show
 
 # Setting Shuffle Partitions
 
-\Large
+\large
 ```scala
 spark.conf.set("spark.sql.shuffle.partitions", "10")
 ```
@@ -398,7 +400,8 @@ spark.conf.set("spark.sql.shuffle.partitions", "10")
 
 ```scala
 val texts = spark.read.text(RecordsUrl)
-val prsText = texts.where($"value".contains("PullRequestEvent"))
+val prsText = 
+   texts.where($"value".contains("PullRequestEvent"))
 
 val reparteds = prsText.repartition(2)
 reparteds.write.text("file:///datasets/github/prs")
@@ -508,6 +511,15 @@ mprs.write.parquet("/datasets/github/all")
 
 ![](graphics/UiStagesAll.png)
  
+# Storage size compression
+* original gz - 47MB
+* text only - 115MB
+* parquet - 27.3MB
+
+# Apache Spark?
+
+![Questions?](graphics/SwissArmyKnife.png)
+
 # And now for something completely different: Colon Cancer
 * Screening saves lives! ![](graphics/Chemo.png){width=100px}
      * Colonoscopy - talk to your doc

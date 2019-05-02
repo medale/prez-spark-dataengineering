@@ -137,6 +137,7 @@
 * driver: coordinates this Spark application
 * executors - cores - how many tasks in parallel
 * jars (built via assembly)
+* Also spark-submit (main method)
 
 # Spark Shell Startup
 * web ui (for this Spark application)
@@ -160,6 +161,7 @@
 * urls - file, hdfs, s3a
 * schema - superset of all JSONs
 * just execute job (list files, read to find schema)
+* count happens on executors (serializing code!)
 
 # Spark Application UI - Jobs, stages, tasks
 * job0 - read 3 unsplittable files, determine JSON schema
@@ -180,6 +182,7 @@
 * See two stages - shuffle
 
 # One Job = n lazy transformations, 1 action
+* start up application once (driver and executors)
 * lazy transformations
 * Dataset api - select (projection)
 * distinct
@@ -199,6 +202,13 @@
 * Splittable: bzip2, parquet, avro
 * Non-splittable: gzip (1 task per file)
 * small file problem
+
+# Resilient Distributed Datasets (RDDs)
+* total file < 384MB
+* one task per block - 1 partition
+
+# RDDs - Not deprecated!
+* Underlying but optimized via Datasets/DataFrames
 
 # Datasets/DataFrames compiled to RDDs
 * Catalyst query optimizer for built-in functions
@@ -289,6 +299,11 @@
 
 # All Completed Stage
 * reads all (some task read more than one file)
+
+# Storage size compression
+* original gz - 47MB
+* text only - 115MB
+* parquet - 27.3MB
 
 # Memory pressure - partitions, executors, shuffle partitions
 
