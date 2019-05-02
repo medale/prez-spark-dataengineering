@@ -45,6 +45,12 @@ object DataExplorer {
     ymdhPrs.write.partitionBy("year","month","day","hour").
       parquet("file:///datasets/github/prs-ymdh")
 
+    val mprs = spark.read.parquet("file:///datasets/github/prs-ymdh")
+    val oneHour = mprs.where("year = 2019 AND month = 04 AND " +
+      "day = 28 AND hour = 21")
+
+    oneHour.explain(true)
+
     (totalEventCount, pullRequestEventCount)
   }
 

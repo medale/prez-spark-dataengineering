@@ -100,8 +100,9 @@ def main(args: Array[String]): Unit = {
 
 ![](graphics/ApiSparkSession.png)
 
-# API - SparkSession Class 
+# API - SparkSession Class,  DataFrame = Dataset\[Row\]
 
+\Large
 ```scala
 //spark.read - DataFrameReader
 val records: DataFrame = spark.read.json(RecordsUrl)
@@ -118,13 +119,6 @@ val records: DataFrame = spark.read.json(RecordsUrl)
 * Third party: 
      * https://spark-packages.org: Avro, Redshift, MongoDB...
      * Spark Cassandra Connector (DataStax github)
-
-# DataFrame = Dataset\[Row\]
-
-\large
-```scala
-val records: DataFrame = spark.read.json(RecordsUrl)
-```
 
 # DataFrame Schema
 
@@ -487,10 +481,12 @@ part-00003-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
 
 # Reading from Parquet - schema and predicate pushdown
 
-\small
+\scriptsize
 ```scala
 val mprs = spark.read.parquet("file:///datasets/github/prs-ymdh")
-val oneHour = mprs.where("year = 2019 AND month = 04 AND day = 28 AND hour = 21")
+val oneHour = mprs.where("year = 2019 AND month = 04 AND " +
+   "day = 28 AND hour = 21")
+
 oneHour.explain(true)
 ...
 == Optimized Logical Plan ==
@@ -499,9 +495,19 @@ Filter (((((((isnotnull(day#493) && isnotnull(year#491)) && isnotnull(month#492)
 && (hour#494 = 21))
 +- Relation[actor#483,created_at#484,id#485,org#486,payload#487,public#488,repo#489,
 type#490,year#491,month#492,day#493,hour#494] parquet
+
+oneHour.write.parquet("/datasets/github/one")
+mprs.write.parquet("/datasets/github/all")
 ```
 
+# One Hour Completed Stage
 
+![](graphics/UiStagesOneHour.png)
+
+# All Completed Stage
+
+![](graphics/UiStagesAll.png)
+ 
 # And now for something completely different: Colon Cancer
 * Screening saves lives! ![](graphics/Chemo.png){width=100px}
      * Colonoscopy - talk to your doc
