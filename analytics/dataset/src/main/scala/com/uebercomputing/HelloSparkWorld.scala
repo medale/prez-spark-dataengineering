@@ -1,5 +1,6 @@
 package com.uebercomputing
 
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SparkSession
 
 /**
@@ -10,7 +11,7 @@ object HelloSparkWorld {
   val RecordsUrl = "file:///datasets/github/data"
 
   def process(spark: SparkSession): (Long,Long) = {
-    val records = spark.read.json(RecordsUrl)
+    val records: DataFrame = spark.read.json(RecordsUrl)
     records.cache()
     val totalEventCount = records.count()
 

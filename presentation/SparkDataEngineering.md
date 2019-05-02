@@ -93,7 +93,20 @@ def main(args: Array[String]): Unit = {
 
 ![](graphics/ApiSparkSession.png)
 
-# API - SparkSession Class
+# API - SparkSession Class 
+
+```scala
+//spark.read - DataFrameReader
+val records: DataFrame = spark.read.json(RecordsUrl)
+```
+
+# API - DataFrameReader
+* csv
+* json
+* parquet
+* text/textFile
+* Third party: https://spark-packages.org
+     * Avro, Redshift, MongoDB...
 
 
 # Resilient Distributed Datasets (RDDs)

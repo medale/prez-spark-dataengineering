@@ -85,10 +85,20 @@
 * Object ("static" methods) vs. class
 
 # API - SparkSession Class
-* conf - RuntimeConfig (e.g. S3 access keys)
+* read - DataFrameReader input
+* createDataFrame/createDataset
+* emptyDataFrame/emptyDataset
+* spark.implicits._ ($ and Scala object encoder)
+* udf
+* stop
 
-
-
+# API - DataFrameReader
+* csv
+* json
+* parquet
+* text - DataFrame - column "value"
+* textFile - Dataset\[String\]
+* schema - specify read schema
 
 
 # Driver - Executors
@@ -129,6 +139,10 @@ https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformati
 # Serialization code
 
 # Airflow - Spark workflows
+
+# S3
+sc.hadoopConfiguration.set("fs.s3a.secret.key",
+sc.hadoopConfiguration.set("fs.s3a.access.key",
 
 https://www.gharchive.org/
 wget http://data.gharchive.org/2019-04-28-0.json.gz

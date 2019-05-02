@@ -89,6 +89,7 @@ lazy val datasetAnalytics = (project in file(s"${analyticsBaseDir}/dataset"))
     libraryDependencies :=
       commonDependencies ++
         sparkDependencies ++
+        awsDependencies ++
         testDependencies ++
         sparkTestDependencies
   )
@@ -101,6 +102,7 @@ lazy val rddAnalytics = (project in file(s"${analyticsBaseDir}/rdd"))
   libraryDependencies :=
     commonDependencies ++
       sparkDependencies ++
+      awsDependencies ++
       testDependencies ++
       sparkTestDependencies
 )
