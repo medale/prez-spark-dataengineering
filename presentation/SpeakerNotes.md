@@ -15,13 +15,14 @@
 * Scala Spark Code Examples: https://github.com/medale/prez-spark-dataengineering
 * Also https://github.com/medale/spark-mail
 
-# Goals
-* Intro to Spark Scala Dataset API for data engineering
-     * At scale data exploration
-     * At scale ETL (Extract Transform Load)
-     * Storage formats - splittable vs. non-splittable
-     * Spark abstractions
-     
+# Data Science Mission - ID malicious GitHub Pull Requests?
+* https://www.gharchive.org/
+
+# Data Engineering Mission
+* https://www.gharchive.org/
+* Old API/Events API (we won't deal with old API)
+* Events API - PullRequestEvent
+
 # Data Engineering
 
 * [dataquest.io: "transform data into a useful format for analysis"](https://www.dataquest.io/blog/what-is-a-data-engineer/)
@@ -99,6 +100,29 @@
 * text - DataFrame - column "value"
 * textFile - Dataset\[String\]
 * schema - specify read schema
+
+# DataFrame = Dataset\[Row\]
+* sql package object - `type DataFrame = Dataset[Row]`
+* DataFrame has a schema
+
+# DataFrame Schema
+* printSchema
+* .schema ()
+
+# GitHub Data
+* subset to local drive
+* for production - need distributed storage system
+     * S3
+     * Hadoop HDFS
+
+# Preliminary Exploration
+* What does on JSON look like pretty printed?
+
+
+
+# Starting Spark Standalone Cluster Manager
+* start master to explicit host (default port 7077)
+* one or more workers to spark://...:
 
 
 # Driver - Executors

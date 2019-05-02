@@ -13,12 +13,19 @@ date: May 2019
 * Slides: https://github.com/medale/prez-spark-dataengineering/blob/master/presentation/SparkDataEngineering.pdf
 * Scala Spark Code Examples: https://github.com/medale/prez-spark-dataengineering
 
-# Goals
-* Intro to Spark Scala Dataset API for data engineering
-     * At scale data exploration
-     * At scale ETL (Extract Transform Load)
-     * Storage formats
-     * Spark abstractions
+# Data Science Mission
+
+\Large
+* ID malicious GitHub Pull Requests?
+* Source: https://www.gharchive.org/
+
+# Data Engineering Mission
+* https://www.gharchive.org/
+     * 2/12/2011-12/31/2014 Timeline API (now deprecated).
+     * From 1/1/2015 to now Events API.
+     * Since 2015: About 20-40MB/hour * 37900 hours ~1TB 
+* Store: Fast, time-based access when specifying yyyy, mm, dd, hh (or prefix combination)
+* Side effect: Learn more about Spark batch processing
      
 # Data engineering 
 
@@ -47,8 +54,8 @@ date: May 2019
 # Anatomy of a Spark Application
 
 ![](graphics/SparkApplication.png)
-\tiny Source: Apache Spark website
-
+\tiny Source: Apache Spark website  
+     
 # Hello, Spark World!
 
 \scriptsize
@@ -100,18 +107,91 @@ def main(args: Array[String]): Unit = {
 val records: DataFrame = spark.read.json(RecordsUrl)
 ```
 
-# API - DataFrameReader
+# spark.read: DataFrameReader - Input
+\Large
 * csv
 * json
 * parquet
-* text/textFile
-* Third party: https://spark-packages.org
-     * Avro, Redshift, MongoDB...
+* text - DataFrame with "value" column
+* textFile - Dataset\[String\]
+* Third party: 
+     * https://spark-packages.org: Avro, Redshift, MongoDB...
+     * Spark Cassandra Connector (DataStax github)
 
+# DataFrame = Dataset\[Row\]
 
-# Resilient Distributed Datasets (RDDs)
+\large
+```scala
+val records: DataFrame = spark.read.json(RecordsUrl)
+```
 
-![](graphics/SparkRdd.png)
+# DataFrame Schema
+
+\scriptsize
+```scala
+scala> records.printSchema
+root
+ |-- actor: struct (nullable = true)
+ |    |-- display_login: string (nullable = true)
+ |    |-- id: long (nullable = true)
+   ...
+ |-- created_at: string (nullable = true)
+ |-- id: string (nullable = true)
+ |-- payload: struct (nullable = true)
+ |    |-- comment: struct (nullable = true)
+ |    |    |-- body: string (nullable = true)    
+   ...
+ |-- public: boolean (nullable = true)
+ |-- repo: struct (nullable = true)
+ |    |-- id: long (nullable = true)
+ |    |-- url: string (nullable = true)
+ |-- type: string (nullable = true)
+```
+
+# GitHub Data
+
+```bash
+cd /datasets/github/data
+wget http://data.gharchive.org/2019-04-28-0.json.gz
+wget http://data.gharchive.org/2019-04-28-1.json.gz
+wget http://data.gharchive.org/2019-04-28-13.json.gz
+```
+
+# Preliminary Exploration
+
+```bash
+# creates 2019-04-28-0.json
+gunzip 2019-04-28-0.json.gz
+
+# 95865
+wc -l 2019-04-28-0.json
+
+# open in editor - 1 JSON per line
+```
+
+# One JSON per line
+
+![](graphics/OneJsonPerLine.png)
+
+# Pretty Print?
+
+```bash
+
+# default 1000 lines - xaa, xab
+split 2019-04-28-0.json
+mkdir temp
+cd temp
+
+# 1 file per line
+split -1 ../xaa
+
+# xac's a PullRequestEvent
+python -m json.tool < xac > pretty.json
+```
+
+# Open pretty.json in Atom - PullRequestEvent 
+
+![](graphics/PullRequestEvent.png)
 
 # Starting Spark Standalone Cluster Manager
 
@@ -205,6 +285,10 @@ val pullRequestEventCount = prs.count()
 # Job 1 - Stages 1 and 2 DAG
 
 ![](graphics/UiJob1Dag.png){height=95%}
+
+# Resilient Distributed Datasets (RDDs)
+
+![](graphics/SparkRdd.png)
 
 # RDDs - Not deprecated!
 
