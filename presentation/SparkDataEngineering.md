@@ -10,24 +10,31 @@ date: May 2019
 ---
 
 # Intro, Slides And Code
-* Slides: https://github.com/medale/
-* Scala Spark Code Examples: https://github.com/medale/
+* Slides: https://github.com/medale/prez-spark-dataengineering/blob/master/presentation/SparkDataEngineering.pdf
+* Scala Spark Code Examples: https://github.com/medale/prez-spark-dataengineering
 
+# Goals
+* Intro to Spark Scala Dataset API for data engineering
+     * At scale data exploration
+     * At scale ETL (Extract Transform Load)
+     * Storage formats
+     * Spark abstractions
+     
 # Data engineering 
 
 ![](graphics/DataEngineering.png)
 
-# Data engineering on small dataset
+# Apache Spark: Data engineering on small dataset
 
 ![Laptop](graphics/Laptop.png)
 
-# Data engineering for larger dataset (Vertical Scaling)
+# Apache Spark: Data engineering for larger dataset (Vertical Scaling)
 
 ![Beefed-up Server](graphics/VerticalScaling.png){height=80%}
 
 # Data engineering for large datasets (Horizontal Scaling)
 
-![Multiple cooperating Servers](graphics/HorizontalScaling.png)
+![Multiple cooperating Servers](graphics/HorizontalScaling.jpg){height=80%}
 
 # Cluster Manager
 
@@ -51,10 +58,10 @@ date: May 2019
 \small
 ```bash
 # Start on master
-$SPARK_HOME/sbin/start-master.sh --host 192.168.1.230
+$SPARK_HOME/sbin/start-master.sh --host 192.168.1.232
 
 # Start one or more workers
-$SPARK_HOME/sbin/start-slave.sh spark://192.168.1.230:7077
+$SPARK_HOME/sbin/start-slave.sh spark://192.168.1.232:7077
 ```
 
 # Spark Standalone Cluster Manager UI - idle
@@ -64,7 +71,7 @@ $SPARK_HOME/sbin/start-slave.sh spark://192.168.1.230:7077
 # Running spark-shell in cluster
 
 ```bash
-spark-shell --master spark://192.168.1.230:7077 \
+spark-shell --master spark://192.168.1.232:7077 \
  --driver-memory 1g \
  --executor-memory 2g \
  --total-executor-cores 4 \
@@ -153,4 +160,4 @@ val pullRequestEventCount = prs.count()
 ![](graphics/Farley.png){width=200px}
 
 * medale@asymmetrik.com
-* [Infrequent blog/past presentations http://uebercomputing.com/](http://uebercomputing.com/)
+* https://github.com/medale/prez-spark-dataengineering/blob/master/presentation/SparkDataEngineering.pdf

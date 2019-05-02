@@ -11,12 +11,17 @@
      * big data with Spark, Databricks, Scala
      * Now Asymmetrik - Scala, Spark, Elasticsearch, Akka...
      * Data Engineer
-* Slides: https://github.com/medale/
-* Scala Spark Code Examples: https://github.com/medale/
+* Slides: https://github.com/medale/prez-spark-dataengineering/blob/master/presentation/SparkDataEngineering.pdf
+* Scala Spark Code Examples: https://github.com/medale/prez-spark-dataengineering
 * Also https://github.com/medale/spark-mail
 
 # Goals
-
+* Intro to Spark Scala Dataset API for data engineering
+     * At scale data exploration
+     * At scale ETL (Extract Transform Load)
+     * Storage formats - splittable vs. non-splittable
+     * Spark abstractions
+     
 # Data Engineering
 
 * [dataquest.io: "transform data into a useful format for analysis"](https://www.dataquest.io/blog/what-is-a-data-engineer/)

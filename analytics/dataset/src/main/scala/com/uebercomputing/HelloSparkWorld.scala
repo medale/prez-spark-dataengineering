@@ -7,8 +7,10 @@ import org.apache.spark.sql.SparkSession
   */
 object HelloSparkWorld {
 
+  val RecordsUrl = "file:///datasets/github/data"
+
   def process(spark: SparkSession): (Long,Long) = {
-    val records = spark.read.json("file:///datasets/github/data")
+    val records = spark.read.json(RecordsUrl)
     records.cache()
     val totalEventCount = records.count()
 
@@ -23,6 +25,7 @@ object HelloSparkWorld {
     val spark = SparkSession.builder().
       appName("HelloSparkWorld").
       getOrCreate()
-    process(spark)
+    val (total, prs) = process(spark)
+    println(s"Total event records: ${total}, pr events: ${prs}.")
   }
 }
