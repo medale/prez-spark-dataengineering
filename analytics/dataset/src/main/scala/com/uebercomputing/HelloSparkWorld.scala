@@ -27,5 +27,6 @@ object HelloSparkWorld {
       getOrCreate()
     val (total, prs) = process(spark)
     println(s"Total event records: ${total}, pr events: ${prs}.")
+    spark.stop()
   }
 }

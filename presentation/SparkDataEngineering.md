@@ -24,6 +24,10 @@ date: May 2019
 
 ![](graphics/DataEngineering.png)
 
+# Apache Spark - Big data tooling
+
+![Swiss Army Knife for Big Data](graphics/SwissArmyKnife.png)
+
 # Apache Spark: Data engineering on small dataset
 
 ![Laptop](graphics/Laptop.png)
@@ -32,17 +36,13 @@ date: May 2019
 
 ![Beefed-up Server](graphics/VerticalScaling.png){height=80%}
 
-# Data engineering for large datasets (Horizontal Scaling)
+# Apache Spark: Data engineering for large datasets (Horizontal Scaling)
 
 ![Multiple cooperating Servers](graphics/HorizontalScaling.jpg){height=80%}
 
-# Cluster Manager
+# Cluster Manager - Manage cores, memory, special capabilities
 
 ![](graphics/ClusterManagers.png)
-
-# Resilient Distributed Datasets (RDDs)
-
-![](graphics/SparkRdd.png)
 
 # Anatomy of a Spark Application
 
@@ -51,7 +51,54 @@ date: May 2019
 
 # Hello, Spark World!
 
-![](graphics/CodeHelloSparkWorldOverview.png)
+\scriptsize
+```scala
+import org.apache.spark.sql.SparkSession
+
+object HelloSparkWorld {
+
+  val RecordsUrl = "file:///datasets/github/data"
+
+  def process(spark: SparkSession): (Long,Long) = {
+    val records = spark.read.json(RecordsUrl)
+    val totalEventCount = records.count()
+    val prs = records.where(records("type") === "PullRequestEvent")
+    val pullRequestEventCount = prs.count()
+    (totalEventCount, pullRequestEventCount)
+  }
+
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder().appName("HelloSparkWorld").getOrCreate()
+    val (total, prs) = process(spark)
+    println(s"Total events: ${total}, pr events: ${prs}.")
+    spark.stop()
+  }
+}
+```
+
+# SparkSession - Gateway to the Cluster
+
+\Large
+```scala
+def main(args: Array[String]): Unit = {
+
+    val spark = SparkSession.builder().
+        appName("HelloSparkWorld").
+        getOrCreate()
+    ...
+    spark.stop()
+```
+
+# API - SparkSession Object
+
+![](graphics/ApiSparkSession.png)
+
+# API - SparkSession Class
+
+
+# Resilient Distributed Datasets (RDDs)
+
+![](graphics/SparkRdd.png)
 
 # Starting Spark Standalone Cluster Manager
 
@@ -78,6 +125,7 @@ spark-shell --master spark://192.168.1.232:7077 \
  --executor-cores 2 \
  --jars /tmp/dataset-0.9.0-SNAPSHOT-fat.jar
 ```
+
 # Spark Shell Startup
 
 ![](graphics/SparkShell.png)

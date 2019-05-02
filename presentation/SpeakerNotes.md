@@ -26,6 +26,78 @@
 
 * [dataquest.io: "transform data into a useful format for analysis"](https://www.dataquest.io/blog/what-is-a-data-engineer/)
 
+# Apache Spark - Big data tooling
+* Shell for exploration at scale
+* Dataset batch API - many supported input sources/formats
+     * builds on Hadoop and other 3rd party libraries
+* Streaming API
+* ML library
+* Graph library
+
+# Apache Spark: Data engineering on small dataset
+* Take subset of data
+* Figure out structure, approaches
+
+# Apache Spark: Data engineering for larger dataset (Vertical Scaling)
+* Server-grade machine - more cores 
+* More memory, more data
+
+# Apache Spark: Data engineering for large datasets (Horizontal Scaling)
+* Cluster manager manages resources
+* Spark manages Spark application (driver, executors)
+     * Sunny day
+     * Error handling (machine dies, slows, network...)
+
+# Cluster Manager - Manage cores, memory, special capabilities
+* Spark local mode (not a cluster manager)
+* Spark Standalone
+* Kubernetes, Mesos
+* Spark on Hadoop YARN
+* In cloud: Spark on AWS EMR, Google, Azure, Databricks 
+* Schedule resources
+
+# Anatomy of a Spark Application
+* One cluster manager - multiple Spark applications
+* Per Spark application
+   * 1 driver
+   * n executors (cache memory, task slots)
+
+![](graphics/CodeHelloSparkWorldOverview.png)
+
+# Hello, Spark World!
+* spark session 
+* spark.read (DataFrameReader) - json (.gz, 1 json per line)
+* lazy transformation - read to get schema
+* count - action - execute a job
+* Datasets, DataFrame and RDD are immutable
+* contain lineage (how did we get to this dataset?)
+* where - transformation
+
+# SparkSession - Gateway to the Cluster
+* builder static method - Builder
+* appName
+* config
+* master
+* getOrCreate()
+
+# API - SparkSession Object
+* spark.apache.org - Documentation - API Docs
+* Object ("static" methods) vs. class
+
+# API - SparkSession Class
+* conf - RuntimeConfig (e.g. S3 access keys)
+
+
+
+
+
+# Driver - Executors
+* Driver: deploy-mode client or cluster, memory
+* Executors
+     * how many total?
+     * how many parallel tasks per executor (cores)
+     * memory
+
 # Code executing on driver vs. executor
 
 # Running spark-shell in cluster
@@ -55,6 +127,8 @@ https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-transformati
 # Memory pressure - partitions, executors, shuffle partitions
 
 # Serialization code
+
+# Airflow - Spark workflows
 
 https://www.gharchive.org/
 wget http://data.gharchive.org/2019-04-28-0.json.gz

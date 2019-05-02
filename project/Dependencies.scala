@@ -7,6 +7,8 @@ object Dependencies {
   //match Spark's pom for these dependencies!
   val scalaVersionStr = "2.11.12"
   val hadoopVersion = "2.7.3"
+  // version must be compatible with hadoop-aws API!
+  val awsSdkVersion = "1.7.4"
   //end of Spark version match
 
   lazy val commonDependencies = Seq(
@@ -23,6 +25,30 @@ object Dependencies {
   )
 
   lazy val sparkDependencies = sparkDependenciesBase.map(_ % "provided")
+
+  //for reading/writing from/to AWS s3a
+  val awsDependencies = Seq(
+    ("com.amazonaws" % "aws-java-sdk" % awsSdkVersion)
+      .exclude("com.fasterxml.jackson.core", "jackson-core")
+      .exclude("com.fasterxml.jackson.core", "jackson-annotations")
+      .exclude("com.fasterxml.jackson.core", "jackson-databind"),
+    ("org.apache.hadoop" % "hadoop-common" % hadoopVersion % "provided")
+      .exclude("commons-beanutils", "commons-beanutils")
+      .exclude("commons-beanutils", "commons-beanutils-core")
+      .exclude("com.fasterxml.jackson.core", "jackson-core")
+      .exclude("com.fasterxml.jackson.core", "jackson-annotations")
+      .exclude("com.fasterxml.jackson.core", "jackson-databind")
+      .exclude("org.slf4j", "slf4j-api"),
+    ("org.apache.hadoop" % "hadoop-aws" % hadoopVersion)
+      .exclude("org.apache.hadoop", "hadoop-common")
+      .exclude("com.amazonaws", "aws-java-sdk")
+      .exclude("commons-beanutils", "commons-beanutils")
+      .exclude("commons-beanutils", "commons-beanutils-core")
+      .exclude("com.fasterxml.jackson.core", "jackson-core")
+      .exclude("com.fasterxml.jackson.core", "jackson-annotations")
+      .exclude("com.fasterxml.jackson.core", "jackson-databind")
+      .exclude("org.slf4j", "slf4j-api")
+  )
 
   //test and integration test dependencies/scope
   lazy val testDependencies = Seq(
