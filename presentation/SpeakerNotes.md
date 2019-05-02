@@ -116,27 +116,75 @@
      * Hadoop HDFS
 
 # Preliminary Exploration
-* What does on JSON look like pretty printed?
+* What's in the gz?
+* How many lines?
 
+# Editor: one JSON per line
+* visual exploration - seems like one JSON per line
 
+# Pretty Print One Record?
+* split
+* python json.tool
+
+# Open pretty.json in Atom - PullRequestEvent
+* see JSON, look at fields for one record
 
 # Starting Spark Standalone Cluster Manager
 * start master to explicit host (default port 7077)
 * one or more workers to spark://...:
 
-
-# Driver - Executors
-* Driver: deploy-mode client or cluster, memory
-* Executors
-     * how many total?
-     * how many parallel tasks per executor (cores)
-     * memory
-
-# Code executing on driver vs. executor
-
 # Running spark-shell in cluster
+* --master - what cluster manager to ask for resources
+* --deploy-mode (default client or cluster)
+* driver: coordinates this Spark application
+* executors - cores - how many tasks in parallel
+* jars (built via assembly)
 
---deploy-mode (default client)
+# Spark Shell Startup
+* web ui (for this Spark application)
+     * 4040, 4041 etc.
+* Special vars: spark: SparkSession, sc: SparkContext
+* Exit: `:quit`
+
+# Spark Standalone Cluster Manager - 1 running application
+* 4 cores (total)
+* 2 executors with 2 cores each
+* 2GB/executor
+* Link to Spark shell - Spark application UI
+
+# spark-shell auto-imports
+* SparkContext - old
+* spark.implicits._ - $ function, encoders for Scala primitives and case classes
+* spark.sql package - DataFrame (Dataset\[Row\])
+* functions: math, string, date for columns
+
+# Data Exploration - schema and counting
+* urls - file, hdfs, s3a
+* schema - superset of all JSONs
+* just execute job (list files, read to find schema)
+
+# Spark Application UI - Jobs, stages, tasks
+* job0 - read 3 unsplittable files, determine JSON schema
+     * 1 stage - everything in parallel
+     * 2 executors with two task slots each
+     * 3 tasks - read unsplittable files
+* job1 - count
+     * 2 stages - count local, shuffle, add up total
+     * 4 tasks - 3 local counts, 1 shuffle add total
+
+# Spark Application UI - Stages
+* 3 stages - last stage 1 task
+
+# Spark Application UI - Stage details
+* input, output
+
+
+# Data Exploration - What types of events?
+* Dataset api - select (projection)
+* distinct
+* lazy transformations
+* show - action
+
 
 # Job - Stages, tasks, partitions
 * each stage - all transformations that can be done without shuffle (narrow transformations)

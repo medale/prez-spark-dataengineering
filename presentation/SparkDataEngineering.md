@@ -11,7 +11,7 @@ date: May 2019
 
 # Intro, Slides And Code
 * Slides: https://github.com/medale/prez-spark-dataengineering/blob/master/presentation/SparkDataEngineering.pdf
-* Scala Spark Code Examples: https://github.com/medale/prez-spark-dataengineering
+* Spark Data Engineering Code Examples: https://github.com/medale/prez-spark-dataengineering
 
 # Data Science Mission
 
@@ -111,6 +111,7 @@ val records: DataFrame = spark.read.json(RecordsUrl)
 \Large
 * csv
 * json
+* jdbc
 * parquet
 * text - DataFrame with "value" column
 * textFile - Dataset\[String\]
@@ -148,7 +149,7 @@ root
  |-- type: string (nullable = true)
 ```
 
-# GitHub Data
+# GitHub Event Data
 
 ```bash
 cd /datasets/github/data
@@ -165,19 +166,17 @@ gunzip 2019-04-28-0.json.gz
 
 # 95865
 wc -l 2019-04-28-0.json
-
-# open in editor - 1 JSON per line
 ```
 
-# One JSON per line
+# Editor: one JSON per line
 
 ![](graphics/OneJsonPerLine.png)
 
-# Pretty Print?
+# Pretty Print One Record?
 
 ```bash
 
-# default 1000 lines - xaa, xab
+# default 1000 lines - xaa, xab...
 split 2019-04-28-0.json
 mkdir temp
 cd temp
@@ -227,64 +226,86 @@ spark-shell --master spark://192.168.1.232:7077 \
 
 ![](graphics/SparkStandaloneSparkShell.png)
 
-# HelloSparkWorld in spark-shell
+# spark-shell auto-imports
+
+\large
+```scala
+scala> :imports
+ 1) import org.apache.spark.SparkContext._
+ 2) import spark.implicits._       
+ 3) import spark.sql               
+ 4) import org.apache.spark.sql.functions._ 
+
+```
+
+# Data Exploration - schema and counting
 
 ```scala
-scala> import com.uebercomputing.HelloSparkWorld
-import com.uebercomputing.HelloSparkWorld
+val RecordsUrl = "file:///datasets/github/data"
+val records = spark.read.json(RecordsUrl)
+records.printSchema
+//...
+// |-- repo: struct (nullable = true)
+// |    |-- id: long (nullable = true)
+// |    |-- name: string (nullable = true)
+// |    |-- url: string (nullable = true)
+// |-- type: string (nullable = true)
 
-scala> HelloSparkWorld.process(spark)
-res0: (Long, Long) = (147374,6699)
+records.count()
+//147,374
 ```
 
 # Spark Application UI - Jobs, stages, tasks
 
-![](graphics/UiHelloWorldJobs.png)
+![](graphics/UiJobs.png)
 
-# Job - n lazy transformations, 1 action
+# Spark Application UI - Stages
 
-\small
-```scala
-//job 0 - list files, infer schema
-val records = spark.read.json("file:///datasets/github/data")
-//transformation
-records.cache()
-//action - job 1
-val totalEventCount = records.count()
+![](graphics/UiStages.png)
 
-//transformation - datasets are immutable!
-val prs = records.where(records("type") === "PullRequestEvent")
-//action - job 2    
-val pullRequestEventCount = prs.count()
-```
+# Spark Application UI - Stage details
 
-# Job 0 - Stages, tasks, partitions
-
-![](graphics/UiJobsHeader.png){height=50%}
-![](graphics/UiJobs01.png){height=50%}
-
-# Job 0 - Stage 0, tasks, partitions
-
-![](graphics/UiStagesHeader.png){height=50%}
-![](graphics/UiStage0.png){height=50%}
-
-# Input partitions - splittable file?
-
-![](graphics/SparkRdd.png)
-
-# Job 1 - count
-
-![](graphics/UiJobsHeader.png){height=50%}
-![](graphics/UiJobs01.png){height=50%}
-
-# Job 1 - count Stages 1 and 2
-
-![](graphics/UiStagesHeader.png){height=50%}
-![](graphics/UiStages12.png){height=50%}
+![](graphics/UiStage1Details.png){height=80%}
 
 # Job 1 - Stages 1 and 2 DAG
 
 ![](graphics/UiJob1Dag.png){height=95%}
+
+# One Job = n lazy transformations, 1 action
+
+\scriptsize
+```scala
+//job0 (read twice - once for schema, once for count)
+val records = spark.read.json(RecordsUrl)
+//lazy transformation
+records.cache()
+//action 1 - end of job 1
+records.count()
+records.printSchema
+
+//2 lazy transformations - immutable datasets
+val types = records.select("type")
+val distinctTypes = types.distinct()
+
+//one eager action - job 2
+distinctTypes.show()
++--------------------+                                                          
+|                type|
++--------------------+
+|           PushEvent|
+...
+|    PullRequestEvent|
++--------------------+
+```
+
+# Spark Application UI - Storage (caching)
+
+![](graphics/UiStorage.png)
+
+
+# Input partitions - splittable file?
+
+![](graphics/SparkRdd.png)
 
 # Resilient Distributed Datasets (RDDs)
 
