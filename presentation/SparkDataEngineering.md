@@ -410,6 +410,15 @@ val reparteds = prsText.repartition(2)
 reparteds.write.text("file:///datasets/github/prs")
 ```
 
+# Writing partitions - Output directory (57MB/file)
+
+```bash
+ls
+_SUCCESS
+part-00000-9f85464d-c4e8-4b55-9d95-580acb3f30cd-c000.txt
+part-00001-9f85464d-c4e8-4b55-9d95-580acb3f30cd-c000.txt
+```
+
 # API - Column
 * +, -, *, %
 * ===, =!=, >, <, ...
@@ -418,6 +427,79 @@ reparteds.write.text("file:///datasets/github/prs")
 * isNull, isNaN, isIn
 
 # API - functions
+* array functions, explode
+* date/time functions
+* math, string
+
+# Date Exploration
+
+\scriptsize
+```scala 
+val prs = spark.read.json("file:///datasets/github/prs")
+//prs: org.apache.spark.sql.DataFrame = [actor: struct<avatar_url: string, 
+//display_login: string ... 4 more fields>, created_at: string
+
+prs.select("created_at").take(10)
+//res15: Array[org.apache.spark.sql.Row] = 
+//Array([2019-04-28T01:37:47Z], 
+//[2019-04-28T01:30:24Z], [2019-04-28T01:23:30Z],...
+```
+
+# Adding year, month, day, hour columns
+
+\small
+```scala
+val ymdhPrs = prs.withColumn("year", year($"created_at")).
+     withColumn("month", month($"created_at")).
+     withColumn("day", dayofmonth($"created_at")).
+     withColumn("hour", hour($"created_at"))
+
+ymdhPrs.printSchema
+...
+ |-- type: string (nullable = true)
+ |-- year: integer (nullable = true)
+ |-- month: integer (nullable = true)
+ |-- day: integer (nullable = true)
+ |-- hour: integer (nullable = true)
+```
+
+# Saving to Parquet with partitioning columns
+
+\scriptsize
+```scala
+ymdhPrs.write.partitionBy("year","month","day","hour").
+     parquet("file:///datasets/github/prs-ymdh")
+     
+/datasets/github/prs-ymdh/year=2019/month=4/day=28/hour=9
+part-00000-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+part-00001-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+part-00002-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+
+/datasets/github/prs-ymdh/year=2019/month=4/day=28/hour=20
+part-00001-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+part-00002-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+part-00003-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+
+/datasets/github/prs-ymdh/year=2019/month=4/day=28/hour=21
+part-00000-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+part-00003-afd2a04d-bdeb-48fe-9e43-12dc4fb3535a.c000.snappy.parquet
+```
+
+# Reading from Parquet - schema and predicate pushdown
+
+\small
+```scala
+val mprs = spark.read.parquet("file:///datasets/github/prs-ymdh")
+val oneHour = mprs.where("year = 2019 AND month = 04 AND day = 28 AND hour = 21")
+oneHour.explain(true)
+...
+== Optimized Logical Plan ==
+Filter (((((((isnotnull(day#493) && isnotnull(year#491)) && isnotnull(month#492)) 
+&& isnotnull(hour#494)) && (year#491 = 2019)) && (month#492 = 4)) && (day#493 = 28)) 
+&& (hour#494 = 21))
++- Relation[actor#483,created_at#484,id#485,org#486,payload#487,public#488,repo#489,
+type#490,year#491,month#492,day#493,hour#494] parquet
+```
 
 
 # And now for something completely different: Colon Cancer

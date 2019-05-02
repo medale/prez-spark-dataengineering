@@ -8,7 +8,7 @@ object DataExplorer {
 
   val RecordsUrl = "file:///datasets/github/data"
 
-  def process(spark: SparkSession): (Long,Long) = {
+  def process(spark: SparkSession): (Long, Long) = {
     val records = spark.read.json(RecordsUrl)
     records.printSchema()
 
@@ -18,8 +18,8 @@ object DataExplorer {
     records.select("type").distinct().
       show(numRows = 100, truncate = false)
 
-    val prs = records.where(records("type") === "PullRequestEvent")
-    val pullRequestEventCount = prs.count()
+    val prsCommon = records.where(records("type") === "PullRequestEvent")
+    val pullRequestEventCount = prsCommon.count()
 
     import spark.implicits._
 
@@ -32,6 +32,18 @@ object DataExplorer {
     val prsText = texts.where($"value".contains("PullRequestEvent"))
     val reparteds = prsText.repartition(2)
     reparteds.write.text("file:///datasets/github/prs")
+
+    val prs = spark.read.json("file:///datasets/github/prs")
+
+    import org.apache.spark.sql.functions._
+
+    val ymdhPrs = prs.withColumn("year", year($"created_at")).
+      withColumn("month", month($"created_at")).
+      withColumn("day", dayofmonth($"created_at")).
+      withColumn("hour", hour($"created_at"))
+
+    ymdhPrs.write.partitionBy("year","month","day","hour").
+      parquet("file:///datasets/github/prs-ymdh")
 
     (totalEventCount, pullRequestEventCount)
   }

@@ -249,18 +249,39 @@
 
 # Just the PullRequestEvents and their schema
 * text - one column "value"
-* 
+
+# Writing partitions - Output directory
+* _ hidden
+* also hidden .crc files
+* part-00000-UUID...
 
 # API - Column
+* Some dataset - use string, some columns
 * +, -, *, %
 * ===, =!=, >, <, ...
 * asc, desc
 * startsWith, contains, endsWith, like, rlike
 * isNull, isNaN, isIn
 
+# API - functions
+* array functions, explode
+* date/time functions
+* math, string
+* use built-in to allow Catalyst optimization
+* also user-defined-functions, user-defined-agg-functions
 
-# Parquet
-* data partitioning
+# Date Exploration
+* created_at is a string but in ISO 8601
+
+# Adding year, month, day, hour columns
+* immutable, 4 transformations
+* use time functions (require column)
+* spark.implicits._ $
+
+# Saving to Parquet with partitioning columns
+* year=2019 etc.
+
+
 
 # Catalyst optimizer, tungsten memory management
 
